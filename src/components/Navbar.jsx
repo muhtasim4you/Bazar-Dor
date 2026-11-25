@@ -4,7 +4,12 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { getCategories, getProducts, formatBengaliNumber } from "@/lib/products";
+import {
+  formatBengaliNumber,
+  getCategories,
+  getProducts,
+  getTickerUnitLabel,
+} from "@/lib/products";
 import { signOut, useSession } from "@/lib/auth-client";
 
 export default function Navbar() {
@@ -101,7 +106,10 @@ export default function Navbar() {
             <span className="ticker-item" key={`${product.id}-${index}`}>
               <span>{product.image || product.categoryIcon}</span>
               <strong>{product.nameBn}</strong>
-              <span>{formatBengaliNumber(product.today)} টাকা</span>
+              <span>
+                {formatBengaliNumber(product.today)} টাকা/
+                {getTickerUnitLabel(product.unit)}
+              </span>
               <span
                 className={`ticker-change ${
                   product.change?.dir === "up"

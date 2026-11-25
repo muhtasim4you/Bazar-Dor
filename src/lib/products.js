@@ -5,9 +5,19 @@ const API_BASE_URL =
 export const unitLabels = {
   kg: "প্রতি কেজি",
   liter: "প্রতি লিটার",
+  litre: "প্রতি লিটার",
   dozen: "প্রতি ডজন",
   piece: "প্রতি পিস",
   pcs: "প্রতি পিস",
+};
+
+const tickerUnitLabels = {
+  kg: "কেজি",
+  liter: "লিটার",
+  litre: "লিটার",
+  dozen: "ডজন",
+  piece: "পিস",
+  pcs: "পিস",
 };
 
 export function formatBengaliNumber(value) {
@@ -18,6 +28,10 @@ export function formatBengaliNumber(value) {
 
 export function getUnitLabel(unit) {
   return unitLabels[unit] || `প্রতি ${unit || "একক"}`;
+}
+
+export function getTickerUnitLabel(unit) {
+  return tickerUnitLabels[unit] || unit || "একক";
 }
 
 async function getJson(path) {
