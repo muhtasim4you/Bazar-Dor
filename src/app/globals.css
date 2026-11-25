@@ -657,6 +657,11 @@ button {
   color: var(--muted);
 }
 
+.error-message {
+  color: #b43a36;
+  text-align: center;
+}
+
 .auth-page {
   display: grid;
   min-height: 680px;
