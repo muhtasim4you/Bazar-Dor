@@ -7,6 +7,17 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { signIn, signUp } from "@/lib/auth-client";
 
+function getSocialErrorMessage(error, provider) {
+  const providerName = provider === "github" ? "GitHub" : "Google";
+  const message = error?.message || "";
+
+  if (message.toLowerCase().includes("provider not found")) {
+    return `${providerName} OAuth সেটআপ নেই। সার্ভারে ${providerName === "GitHub" ? "GITHUB_CLIENT_ID ও GITHUB_CLIENT_SECRET" : "GOOGLE_CLIENT_ID ও GOOGLE_CLIENT_SECRET"} সেট করে অ্যাপ restart করুন।`;
+  }
+
+  return message || `${providerName} দিয়ে সাইন ইন করা যায়নি`;
+}
+
 export default function AuthForm({ mode }) {
   const isSignUp = mode === "signup";
   const router = useRouter();
@@ -61,16 +72,10 @@ export default function AuthForm({ mode }) {
         callbackURL: isSignUp ? "/" : nextPath,
       });
       if (result?.error) {
-        toast.error(
-          result.error.message || `${provider} দিয়ে সাইন ইন করা যায়নি`,
-        );
+        toast.error(getSocialErrorMessage(result.error, provider));
       }
     } catch (error) {
-      toast.error(
-        error instanceof Error
-          ? error.message
-          : `${provider} দিয়ে সাইন ইন করা যায়নি`,
-      );
+      toast.error(getSocialErrorMessage(error, provider));
     } finally {
       setLoading(false);
     }
