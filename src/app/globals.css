@@ -237,10 +237,6 @@ button {
   animation: ticker-scroll 65s linear infinite;
 }
 
-.price-ticker:hover .ticker-track {
-  animation-play-state: paused;
-}
-
 .ticker-item {
   display: inline-flex;
   align-items: center;
@@ -1311,5 +1307,9 @@ button {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+
+  .ticker-track {
+    animation: ticker-scroll 65s linear infinite !important;
   }
 }
