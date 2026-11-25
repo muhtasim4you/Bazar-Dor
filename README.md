@@ -34,7 +34,7 @@ npm run dev
 
 `.env.example` কপি করে `.env` তৈরি করুন, তারপর Better Auth ও MongoDB-এর মানগুলো দিন। OAuth secrets কখনো version control-এ commit করবেন না।
 
-Google OAuth-এর জন্য Google credentials দিন। GitHub দিয়ে সাইন আপ চালু করতে GitHub Developer Settings → OAuth Apps-এ একটি OAuth App তৈরি করুন, তারপর `.env`-এ `GITHUB_CLIENT_ID` ও `GITHUB_CLIENT_SECRET` সেট করুন। Local callback URL হবে `http://localhost:3000/api/auth/callback/github`; deployed site-এ callback URL-এ deployed domain ব্যবহার করুন. দুইটি GitHub variable সেট করার পর Next.js dev server restart করুন, কারণ `.env` পরিবর্তন চলমান server-এ প্রয়োগ হয় না।
+Google OAuth-এর জন্য Google credentials দিন। GitHub দিয়ে সাইন আপ চালু করতে GitHub Developer Settings → OAuth Apps-এ একটি OAuth App তৈরি করুন, তারপর `.env`-এ `BETTER_AUTH_GITHUB_CLIENT_ID` ও `BETTER_AUTH_GITHUB_CLIENT_SECRET` সেট করুন। Local callback URL হবে `http://localhost:3000/api/auth/callback/github`; deployed site-এ callback URL-এ deployed domain ব্যবহার করুন। দুইটি GitHub variable সেট করার পর Next.js dev server restart করুন, কারণ `.env` পরিবর্তন চলমান server-এ প্রয়োগ হয় না।
 
 পণ্য API-এর ডিফল্ট ঠিকানা `https://openapi.programming-hero.com/api/bazardor`; প্রয়োজনে `NEXT_PUBLIC_BAZARDOR_API_URL` দিয়ে অন্য compatible API base URL সেট করা যায়।
 

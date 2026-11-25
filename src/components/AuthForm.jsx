@@ -12,7 +12,7 @@ function getSocialErrorMessage(error, provider) {
   const message = error?.message || "";
 
   if (message.toLowerCase().includes("provider not found")) {
-    return `${providerName} OAuth সেটআপ নেই। সার্ভারে ${providerName === "GitHub" ? "GITHUB_CLIENT_ID ও GITHUB_CLIENT_SECRET" : "GOOGLE_CLIENT_ID ও GOOGLE_CLIENT_SECRET"} সেট করে অ্যাপ restart করুন।`;
+    return `${providerName} OAuth সেটআপ নেই। সার্ভারে ${providerName === "GitHub" ? "BETTER_AUTH_GITHUB_CLIENT_ID ও BETTER_AUTH_GITHUB_CLIENT_SECRET" : "GOOGLE_CLIENT_ID ও GOOGLE_CLIENT_SECRET"} সেট করে অ্যাপ restart করুন।`;
   }
 
   return message || `${providerName} দিয়ে সাইন ইন করা যায়নি`;
