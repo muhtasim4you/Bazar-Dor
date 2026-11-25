@@ -975,6 +975,25 @@ button {
   margin-top: 22px;
 }
 
+.profile-details {
+  display: grid;
+  gap: 8px;
+  color: #647166;
+}
+
+.profile-details p {
+  margin: 0;
+}
+
+.profile-details strong {
+  color: var(--green-900);
+}
+
+.profile-update-form {
+  max-width: 470px;
+  margin-top: 24px;
+}
+
 @media (max-width: 1020px) {
   .nav-main {
     grid-template-columns: auto 1fr;
