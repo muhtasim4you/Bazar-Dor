@@ -13,7 +13,7 @@ export default function ProtectedRoute({ children }) {
   useEffect(() => {
     if (isPending || session?.user) return;
     toast.error("এই পৃষ্ঠাটি দেখতে সাইন ইন করুন");
-    router.replace(`/sign-in?next=${encodeURIComponent(pathname)}`);
+    router.replace(`/signin?next=${encodeURIComponent(pathname)}`);
   }, [isPending, pathname, router, session]);
 
   if (isPending || !session?.user) {

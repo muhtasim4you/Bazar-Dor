@@ -777,6 +777,12 @@ button {
   font-weight: 700;
 }
 
+.social-button:disabled,
+.button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
 .auth-switch {
   margin: 20px 0 0 !important;
   color: #68746a !important;

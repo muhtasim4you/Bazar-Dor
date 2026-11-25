@@ -83,10 +83,10 @@ export default function Navbar() {
             </>
           ) : !isPending ? (
             <>
-              <Link className="button button-text button-small" href="/sign-in">
+              <Link className="button button-text button-small" href="/signin">
                 সাইন ইন
               </Link>
-              <Link className="button button-primary button-small" href="/sign-up">
+              <Link className="button button-primary button-small" href="/signup">
                 সাইন আপ
               </Link>
             </>
