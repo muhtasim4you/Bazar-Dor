@@ -53,18 +53,24 @@ export default function AuthForm({ mode }) {
     }
   }
 
-  async function handleGoogleSignIn() {
+  async function handleSocialSignIn(provider) {
     setLoading(true);
     try {
       const result = await signIn.social({
-        provider: "google",
+        provider,
         callbackURL: isSignUp ? "/" : nextPath,
       });
       if (result?.error) {
-        toast.error(result.error.message || "Google দিয়ে সাইন ইন করা যায়নি");
+        toast.error(
+          result.error.message || `${provider} দিয়ে সাইন ইন করা যায়নি`,
+        );
       }
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Google দিয়ে সাইন ইন করা যায়নি");
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : `${provider} দিয়ে সাইন ইন করা যায়নি`,
+      );
     } finally {
       setLoading(false);
     }
@@ -97,7 +103,14 @@ export default function AuthForm({ mode }) {
             ? "বাজার দর ব্যবহার শুরু করতে তথ্যগুলো দিন।"
             : "আপনার বাজারদর অ্যাকাউন্টে ফিরে আসুন।"}
         </p>
-        <form className="form-stack" onSubmit={handleSubmit}>
+        <form
+          className="form-stack"
+          onInvalid={(event) => {
+            event.preventDefault();
+            toast.error("অনুগ্রহ করে সব তথ্য সঠিকভাবে পূরণ করুন");
+          }}
+          onSubmit={handleSubmit}
+        >
           {isSignUp ? (
             <label className="form-field">
               আপনার নাম
@@ -141,14 +154,24 @@ export default function AuthForm({ mode }) {
         </form>
 
         <div className="auth-divider">অথবা</div>
-        <button
-          className="social-button"
-          disabled={loading}
-          onClick={handleGoogleSignIn}
-          type="button"
-        >
-          <span aria-hidden="true">G</span> Google দিয়ে চালিয়ে যান
-        </button>
+        <div className="social-actions">
+          <button
+            className="social-button"
+            disabled={loading}
+            onClick={() => handleSocialSignIn("google")}
+            type="button"
+          >
+            <span aria-hidden="true">G</span> Google দিয়ে চালিয়ে যান
+          </button>
+          <button
+            className="social-button"
+            disabled={loading}
+            onClick={() => handleSocialSignIn("github")}
+            type="button"
+          >
+            <span aria-hidden="true">⌘</span> GitHub দিয়ে চালিয়ে যান
+          </button>
+        </div>
         <p className="auth-switch">
           {isSignUp ? "আগে থেকেই অ্যাকাউন্ট আছে? " : "অ্যাকাউন্ট নেই? "}
           <Link href={isSignUp ? "/signin" : "/signup"}>

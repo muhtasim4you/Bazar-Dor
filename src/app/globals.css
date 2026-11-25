@@ -777,6 +777,11 @@ button {
   font-weight: 700;
 }
 
+.social-actions {
+  display: grid;
+  gap: 9px;
+}
+
 .social-button:disabled,
 .button:disabled {
   cursor: wait;
