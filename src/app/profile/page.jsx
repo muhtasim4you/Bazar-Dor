@@ -9,32 +9,40 @@ function ProfileContent() {
   const user = session.user;
 
   return (
-    <section className="page-container profile-panel">
-      <div className="profile-header">
-        <span className="profile-avatar">
-          {user.name?.slice(0, 1) || "👤"}
+    <section className="page-container profile-page">
+      <header className="profile-page-heading">
+        <h1>আমার প্রোফাইল</h1>
+        <p>আপনার অ্যাকাউন্টের তথ্য দেখুন ও হালনাগাদ করুন।</p>
+      </header>
+      <div className="profile-user-card">
+        <span className="profile-user-avatar">
+          {user.image ? (
+            <img alt="" src={user.image} />
+          ) : (
+            user.name?.slice(0, 1) || "👤"
+          )}
         </span>
-        <div>
-          <h1>আমার প্রোফাইল</h1>
-          <p>আপনার অ্যাকাউন্টের তথ্য</p>
+        <div className="profile-user-copy">
+          <strong>{user.name}</strong>
+          <span>{user.email}</span>
         </div>
       </div>
-      <div className="profile-details">
-        <p>
-          <strong>নাম:</strong> {user.name}
-        </p>
-        <p>
-          <strong>ইমেইল:</strong> {user.email}
-        </p>
-      </div>
-      <div className="profile-actions">
-        <Link className="button button-primary" href="/profile/update">
-          তথ্য হালনাগাদ করুন
+      <section className="profile-info-card">
+        <h2>তথ্য</h2>
+        <div className="profile-readonly-fields">
+          <div>
+            <span>নাম</span>
+            <strong>{user.name}</strong>
+          </div>
+          <div>
+            <span>ইমেইল</span>
+            <strong>{user.email}</strong>
+          </div>
+        </div>
+        <Link className="button button-primary profile-info-button" href="/profile/update">
+          তথ্য হালনাগাদ
         </Link>
-        <Link className="button button-outline" href="/">
-          হোম পেজে ফিরুন
-        </Link>
-      </div>
+      </section>
     </section>
   );
 }

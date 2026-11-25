@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import ProtectedRoute from "@/components/ProtectedRoute";
-import { authClient, useSession } from "@/lib/auth-client";
+import { authClient, signOut, useSession } from "@/lib/auth-client";
 
 function UpdateProfileForm() {
   const { data: session } = useSession();
@@ -42,28 +42,72 @@ function UpdateProfileForm() {
     }
   }
 
+  async function handleSignOut() {
+    try {
+      const result = await signOut();
+      if (result.error) {
+        toast.error(result.error.message || "সাইন আউট করা যায়নি");
+        return;
+      }
+      toast.success("আপনি সাইন আউট করেছেন");
+      router.push("/");
+      router.refresh();
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "সাইন আউট করা যায়নি");
+    }
+  }
+
   return (
-    <section className="page-container profile-panel">
-      <Link className="detail-back" href="/profile">
+    <section className="page-container profile-page">
+      <Link className="profile-back-link" href="/profile">
         ← প্রোফাইলে ফিরে যান
       </Link>
-      <h1 className="section-title">প্রোফাইলের তথ্য হালনাগাদ</h1>
-      <p className="section-subtitle">আপনার অ্যাকাউন্টের নাম পরিবর্তন করুন।</p>
-      <form className="form-stack profile-update-form" onSubmit={handleSubmit}>
-        <label className="form-field">
-          আপনার নাম
-          <input
-            autoComplete="name"
-            maxLength={100}
-            onChange={(event) => setName(event.target.value)}
-            required
-            value={name}
-          />
-        </label>
-        <button className="button button-primary" disabled={saving} type="submit">
-          {saving ? "হালনাগাদ হচ্ছে…" : "তথ্য হালনাগাদ করুন"}
+      <header className="profile-page-heading">
+        <h1>আমার প্রোফাইল</h1>
+        <p>আপনার অ্যাকাউন্টের তথ্য হালনাগাদ করুন।</p>
+      </header>
+      <div className="profile-user-card">
+        <span className="profile-user-avatar">
+          {session.user.image ? (
+            <img alt="" src={session.user.image} />
+          ) : (
+            session.user.name?.slice(0, 1) || "👤"
+          )}
+        </span>
+        <div className="profile-user-copy">
+          <strong>{session.user.name}</strong>
+          <span>{session.user.email}</span>
+        </div>
+        <button
+          className="button button-danger-outline profile-edit-link"
+          onClick={handleSignOut}
+          type="button"
+        >
+          ↗ সাইন আউট
         </button>
-      </form>
+      </div>
+      <section className="profile-info-card">
+        <h2>তথ্য</h2>
+        <form className="profile-info-form" onSubmit={handleSubmit}>
+          <label className="form-field">
+            নাম
+            <input
+              autoComplete="name"
+              maxLength={100}
+              onChange={(event) => setName(event.target.value)}
+              required
+              value={name}
+            />
+          </label>
+          <button
+            className="button button-primary profile-info-button"
+            disabled={saving}
+            type="submit"
+          >
+            {saving ? "আপডেট হচ্ছে…" : "আপডেট"}
+          </button>
+        </form>
+      </section>
     </section>
   );
 }

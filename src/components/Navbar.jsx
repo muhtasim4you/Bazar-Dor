@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import {
   formatBengaliNumber,
@@ -19,6 +19,33 @@ export default function Navbar() {
   const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
   const [banglaDate, setBanglaDate] = useState("");
+  const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+  const profileMenuRef = useRef(null);
+
+  useEffect(() => {
+    setProfileMenuOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    if (!profileMenuOpen) return;
+
+    function handlePointerDown(event) {
+      if (!profileMenuRef.current?.contains(event.target)) {
+        setProfileMenuOpen(false);
+      }
+    }
+
+    function handleKeyDown(event) {
+      if (event.key === "Escape") setProfileMenuOpen(false);
+    }
+
+    document.addEventListener("mousedown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [profileMenuOpen]);
 
   useEffect(() => {
     setBanglaDate(
@@ -37,14 +64,19 @@ export default function Navbar() {
   }, []);
 
   async function handleSignOut() {
-    const result = await signOut();
-    if (result.error) {
-      toast.error(result.error.message || "সাইন আউট করা যায়নি");
-      return;
+    try {
+      const result = await signOut();
+      if (result.error) {
+        toast.error(result.error.message || "সাইন আউট করা যায়নি");
+        return;
+      }
+      setProfileMenuOpen(false);
+      toast.success("আপনি সাইন আউট করেছেন");
+      router.push("/");
+      router.refresh();
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "সাইন আউট করা যায়নি");
     }
-    toast.success("আপনি সাইন আউট করেছেন");
-    router.push("/");
-    router.refresh();
   }
 
   return (
@@ -77,15 +109,60 @@ export default function Navbar() {
         </nav>
         <div className="nav-auth">
           {session?.user ? (
-            <>
-              <Link className="profile-link" href="/profile">
-                <span className="avatar">{session.user.name?.slice(0, 1) || "👤"}</span>
-                <span className="profile-name">{session.user.name}</span>
-              </Link>
-              <button className="button button-outline button-small" onClick={handleSignOut}>
-                সাইন আউট
+            <div className="profile-menu-container" ref={profileMenuRef}>
+              <button
+                aria-expanded={profileMenuOpen}
+                aria-haspopup="menu"
+                aria-label="প্রোফাইল সেটিংস"
+                className="profile-menu-trigger"
+                onClick={() => setProfileMenuOpen((open) => !open)}
+                type="button"
+              >
+                <span className="avatar">
+                  {session.user.image ? (
+                    <img alt="" src={session.user.image} />
+                  ) : (
+                    session.user.name?.slice(0, 1) || "👤"
+                  )}
+                </span>
+                <span className="profile-trigger-name">{session.user.name}</span>
+                <span className="profile-chevron" aria-hidden="true">⌄</span>
               </button>
-            </>
+              {profileMenuOpen ? (
+                <div className="profile-dropdown" role="menu">
+                  <div className="profile-dropdown-user">
+                    <span className="profile-dropdown-avatar">
+                      {session.user.image ? (
+                        <img alt="" src={session.user.image} />
+                      ) : (
+                        session.user.name?.slice(0, 1) || "👤"
+                      )}
+                    </span>
+                    <span className="profile-dropdown-copy">
+                      <strong>{session.user.name}</strong>
+                      <small>{session.user.email}</small>
+                    </span>
+                  </div>
+                  <div className="profile-dropdown-divider" />
+                  <Link
+                    className="profile-dropdown-item"
+                    href="/profile"
+                    onClick={() => setProfileMenuOpen(false)}
+                    role="menuitem"
+                  >
+                    <span aria-hidden="true">♙</span> আমার প্রোফাইল
+                  </Link>
+                  <button
+                    className="profile-dropdown-item profile-dropdown-signout"
+                    onClick={handleSignOut}
+                    role="menuitem"
+                    type="button"
+                  >
+                    <span aria-hidden="true">↪</span> সাইন আউট
+                  </button>
+                </div>
+              ) : null}
+            </div>
           ) : !isPending ? (
             <>
               <Link className="button button-text button-small" href="/signin">
