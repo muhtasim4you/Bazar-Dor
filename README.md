@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# বাজার দর — BazarDor
 
-## Getting Started
+বাজার দর বাংলাদেশের নিত্যপ্রয়োজনীয় পণ্যের দৈনিক দাম ও বিভিন্ন বাজারের দামের তুলনা দেখানোর একটি responsive web app। চাল, ডাল, সবজি, মাছসহ পণ্যের হালনাগাদ দাম এক জায়গায় দেখে সহজে বাজার পরিকল্পনা করুন।
 
-First, run the development server:
+## প্রযুক্তি
+
+- Next.js 16 App Router
+- React 19
+- JavaScript
+- CSS এবং responsive layouts
+- Better Auth: email/password, Google OAuth এবং ঐচ্ছিক GitHub OAuth
+- MongoDB
+- বাজারদরের BazarDor API
+- React Hot Toast
+
+## প্রধান সুবিধা
+
+1. বাংলাদেশি সংখ্যায় পণ্যের দাম, মূল্য পরিবর্তনের ticker এবং responsive product cards।
+2. দাম বেড়েছে/কমেছে এমন পণ্যের তালিকা এবং সব পণ্যের বাজারদর।
+3. বিভাগ অনুযায়ী পণ্য দেখা; দাম কম থেকে বেশি বা বেশি থেকে কম সাজানো।
+4. লগইন-সুরক্ষিত পণ্যের বিবরণ এবং বাজারভিত্তিক সর্বনিম্ন/সর্বোচ্চ দাম।
+5. Better Auth email/password ও Google সাইন-ইন; সাইন আপ, সাইন আউট এবং toast feedback।
+6. সুরক্ষিত প্রোফাইল পেজ থেকে নাম হালনাগাদ।
+7. লোডিং skeleton, খালি বিভাগ ও অজানা URL-এর জন্য সহায়ক 404 পেজ।
+
+## স্থানীয়ভাবে চালান
+
+প্রয়োজন: Node.js এবং MongoDB connection string।
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+`.env` ফাইলে Better Auth ও MongoDB কনফিগার করুন:
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+```dotenv
+BETTER_AUTH_SECRET=replace-with-a-long-random-secret
+BETTER_AUTH_URL=http://localhost:3000
+DATABASE_URI=mongodb://127.0.0.1:27017
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Google OAuth ব্যবহার করতে Google credentials দিন। GitHub OAuth ঐচ্ছিক: `GITHUB_CLIENT_ID` এবং `GITHUB_CLIENT_SECRET` দুটিই সেট করলে provider সক্রিয় হবে। Secret বা OAuth credentials কখনো version control-এ commit করবেন না।
 
-## Learn More
+পণ্য API-এর ডিফল্ট ঠিকানা `https://openapi.programming-hero.com/api/bazardor`; প্রয়োজনে `NEXT_PUBLIC_BAZARDOR_API_URL` দিয়ে অন্য compatible API base URL সেট করা যায়।
 
-To learn more about Next.js, take a look at the following resources:
+## Routes
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `/` — বাজারদর এবং সব পণ্য
+- `/category/[slug]` — বিভাগ ও sort control
+- `/product/[slug]` — সাইন-ইন প্রয়োজন
+- `/signin`, `/signup` — authentication
+- `/profile`, `/profile/update` — সাইন-ইন প্রয়োজন
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Build
 
-## Deploy on Vercel
+```bash
+npm run build
+npm run start
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Next.js App Router-এর dynamic routes সরাসরি server-এ render হয়, তাই Vercel-এ `/category/[slug]` এবং `/product/[slug]` refresh করলেও route resolution কাজ করে।
